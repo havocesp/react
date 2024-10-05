@@ -12,6 +12,7 @@ from pyinotify import (
     IN_DELETE, IN_CREATE, IN_CLOSE_WRITE, IN_MOVED_TO
 )
 from time import time
+from security import safe_command
 
 
 parser = argparse.ArgumentParser(
@@ -136,10 +137,10 @@ class Process(ProcessEvent):
 
             args = self.o.command.replace(self.o.replace_str, target).split()
             if self.o.quiet:
-                subprocess.call(args, stdout=subprocess.PIPE)
+                safe_command.run(subprocess.call, args, stdout=subprocess.PIPE)
             else:
                 print("executing script: " + " ".join(args))
-                subprocess.call(args)
+                safe_command.run(subprocess.call, args)
                 print("------------------------")
     process_IN_CLOSE_WRITE = handle
     process_IN_MOVED_TO = handle
